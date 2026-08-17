@@ -59,6 +59,13 @@ export const PROVIDER_PRESETS: ProviderPreset[] = [
     baseUrl: 'https://api.deepseek.com/v1',
     defaultModel: 'deepseek-chat',
   },
+  {
+    id: 'fireworks',
+    label: 'Fireworks AI',
+    kind: 'openai-compatible',
+    baseUrl: 'https://api.fireworks.ai/inference/v1',
+    defaultModel: 'accounts/fireworks/models/llama-v3p3-70b-instruct',
+  },
 ];
 
 export function findPreset(id: string): ProviderPreset | undefined {

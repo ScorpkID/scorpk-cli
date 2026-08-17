@@ -2,7 +2,7 @@
   "name": "scorpk",
   "displayName": "Scorpk CLI",
   "description": "Agente de IA para programar desde la terminal — mismo motor que la extensión de VS Code de Scorpk.",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "license": "MIT",
   "author": {
     "name": "Cristian Trujillo",
