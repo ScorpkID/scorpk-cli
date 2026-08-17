@@ -15,6 +15,19 @@
   "bin": {
     "scorpk": "./dist/cli.js"
   },
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE"
+  ],
+  "keywords": [
+    "ai",
+    "agent",
+    "cli",
+    "coding-assistant",
+    "anthropic",
+    "openai"
+  ],
   "type": "commonjs",
   "engines": {
     "node": ">=18"
@@ -22,7 +35,8 @@
   "scripts": {
     "build": "tsup src/cli.ts --format cjs --target node18 --clean --shims",
     "dev": "tsx src/cli.ts",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "prepublishOnly": "npm run typecheck && npm run build"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.32.1",
