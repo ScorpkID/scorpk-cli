@@ -1,0 +1,43 @@
+{
+  "name": "scorpk",
+  "displayName": "Scorpk CLI",
+  "description": "Agente de IA para programar desde la terminal — mismo motor que la extensión de VS Code de Scorpk.",
+  "version": "0.1.0",
+  "license": "MIT",
+  "author": {
+    "name": "Cristian Trujillo",
+    "url": "https://github.com/cristianT71"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ScorpkID/scorpk-cli.git"
+  },
+  "bin": {
+    "scorpk": "./dist/cli.js"
+  },
+  "type": "commonjs",
+  "engines": {
+    "node": ">=18"
+  },
+  "scripts": {
+    "build": "tsup src/cli.ts --format cjs --target node18 --clean --shims",
+    "dev": "tsx src/cli.ts",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@anthropic-ai/sdk": "^0.32.1",
+    "@supabase/supabase-js": "^2.112.3",
+    "chalk": "^4.1.2",
+    "commander": "^12.1.0",
+    "diff": "^5.2.0",
+    "fast-glob": "^3.3.2",
+    "open": "^8.4.2"
+  },
+  "devDependencies": {
+    "@types/diff": "^5.2.3",
+    "@types/node": "^20.14.0",
+    "tsup": "^8.3.0",
+    "tsx": "^4.19.0",
+    "typescript": "^5.6.0"
+  }
+}
