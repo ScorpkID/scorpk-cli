@@ -5,10 +5,11 @@ import { login, logout, whoami } from './commands/auth';
 import { setKey, listProviders } from './commands/config';
 import { run } from './commands/run';
 import { chat } from './commands/chat';
+import { version } from '../package.json';
 
 const program = new Command();
 
-program.name('scorpk').description('Agente de IA para programar desde la terminal.').version('0.1.0');
+program.name('scorpk').description('Agente de IA para programar desde la terminal.').version(version);
 
 const auth = program.command('auth').description('Cuenta de scorpk.tech (opcional — solo hace falta para Modo equipo/MCP más adelante)');
 auth.command('login').description('Iniciar sesión vía el navegador').action(login);
@@ -18,7 +19,7 @@ auth.command('whoami').description('Mostrar el usuario y plan actuales').action(
 const config = program.command('config').description('Proveedores de IA (BYOK)');
 config
   .command('set-key <proveedor> <key>')
-  .description('Guardar la API key de un proveedor (anthropic, openai, gemini, groq, cerebras, openrouter, deepseek)')
+  .description('Guardar la API key de un proveedor (anthropic, openai, gemini, groq, cerebras, openrouter, deepseek, fireworks)')
   .action(setKey);
 config.command('list').description('Listar proveedores configurados').action(listProviders);
 
