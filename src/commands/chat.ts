@@ -1,11 +1,13 @@
+import React from 'react';
+import { render } from 'ink';
 import chalk from 'chalk';
-import { ChatMessage } from '../agent/types';
 import { SYSTEM_PROMPT } from '../agent/systemPrompt';
 import { withProjectInstructions, readProjectInstructions } from '../agent/projectInstructions';
-import { createClient } from '../providers/clientFactory';
 import { ProviderStore } from '../providers/providerStore';
-import { resolveProvider, runTurn } from './shared';
-import { closePrompt, promptLine } from '../ui/terminal';
+import { AuthService } from '../auth/authService';
+import { App } from '../tui/App';
+import { resolveProvider } from './shared';
+import { version } from '../version';
 
 export interface ChatOptions {
   yes?: boolean;
@@ -26,31 +28,40 @@ export async function chat(opts: ChatOptions): Promise<void> {
     return;
   }
 
-  const client = createClient(provider);
   const model = opts.model ?? provider.defaultModel;
   if (!model) {
-    console.log(chalk.red('No hay un modelo por default para este proveedor — pasá --model.'));
+    console.log(chalk.red('No hay un modelo por default para este proveedor — pasá --model o corré /model dentro del chat.'));
     process.exitCode = 1;
     return;
   }
 
   const instructions = await readProjectInstructions(cwd);
   const system = withProjectInstructions(SYSTEM_PROMPT, instructions);
-  const history: ChatMessage[] = [];
-  const mode: 'auto' | 'manual' = opts.yes ? 'auto' : 'manual';
 
-  console.log(chalk.dim(`Scorpk — ${provider.name} (${model}). "salir" para terminar.\n`));
-
+  let userLabel: string | undefined;
+  let planLabel: string | undefined;
   try {
-    for (;;) {
-      const input = (await promptLine(chalk.cyan('> '))).trim();
-      if (!input) continue;
-      if (['salir', 'exit', 'quit'].includes(input.toLowerCase())) break;
-
-      history.push({ role: 'user', content: input });
-      await runTurn({ client, model, system, history, cwd, mode });
+    const auth = new AuthService();
+    const user = await auth.getUser();
+    if (user) {
+      userLabel = user.email ?? user.name;
+      planLabel = user.plan === 'pro' ? 'Pro' : 'Free';
     }
-  } finally {
-    closePrompt();
+  } catch {
+    // sin sesión o sin red — el chat funciona igual en modo BYOK.
   }
+
+  const { waitUntilExit } = render(
+    React.createElement(App, {
+      version,
+      cwd,
+      system,
+      initialProvider: provider,
+      initialModel: model,
+      initialMode: opts.yes ? 'auto' : 'manual',
+      userLabel,
+      planLabel,
+    }),
+  );
+  await waitUntilExit();
 }

@@ -3,9 +3,10 @@ import { Command } from 'commander';
 import chalk from 'chalk';
 import { login, logout, whoami } from './commands/auth';
 import { setKey, listProviders } from './commands/config';
+import { models } from './commands/models';
 import { run } from './commands/run';
 import { chat } from './commands/chat';
-import { version } from '../package.json';
+import { version } from './version';
 
 const program = new Command();
 
@@ -20,8 +21,14 @@ const config = program.command('config').description('Proveedores de IA (BYOK)')
 config
   .command('set-key <proveedor> <key>')
   .description('Guardar la API key de un proveedor (anthropic, openai, gemini, groq, cerebras, openrouter, deepseek, fireworks)')
+  .option('-m, --model <modelo>', 'saltear el picker y usar este modelo directamente')
   .action(setKey);
 config.command('list').description('Listar proveedores configurados').action(listProviders);
+
+program
+  .command('models [proveedor]')
+  .description('Listar los modelos reales disponibles de un proveedor ya configurado (o el default)')
+  .action(models);
 
 program
   .command('run <tarea>')
@@ -33,8 +40,8 @@ program
 
 program
   .command('chat')
-  .description('Sesión interactiva multi-turno sobre el directorio actual')
-  .option('-y, --yes', 'aplicar los cambios sin pedir confirmación')
+  .description('Sesión interactiva multi-turno sobre el directorio actual, con un menú de comandos (/)')
+  .option('-y, --yes', 'aplicar los cambios sin pedir confirmación (modo auto desde el arranque)')
   .option('-p, --provider <id>', 'proveedor a usar (por defecto, el primero configurado)')
   .option('-m, --model <modelo>', 'modelo a usar (por defecto, el del proveedor)')
   .action(chat);

@@ -13,8 +13,8 @@ import {
   moveFileTool,
   makeMoveFileHandler,
   computeFileChange,
-  FileChange,
 } from './fileTools';
+import type { FileChange } from './fileTools';
 import { runTerminalCommandTool, makeRunTerminalCommandHandler } from './terminalTools';
 import {
   gitStatusTool,
@@ -32,7 +32,8 @@ import { askUserTool, ASK_USER_TOOL_NAME } from './askUserTool';
 
 export type ToolHandler = (args: Record<string, unknown>) => Promise<string>;
 
-export { ASK_USER_TOOL_NAME, computeFileChange, FileChange };
+export { ASK_USER_TOOL_NAME, computeFileChange };
+export type { FileChange };
 
 export const allTools: ToolDef[] = [
   readFileTool,

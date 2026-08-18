@@ -3,11 +3,13 @@
 Agente de IA para programar desde la terminal — mismo motor de tools
 (archivos, git, terminal, búsqueda) y los mismos proveedores que la
 [extensión de VS Code de Scorpk](https://github.com/ScorpkID/scorpk),
-portado a Node puro.
+portado a Node puro, con una sesión de chat interactiva real (banner de
+sesión, menú de comandos con `/`, diffs con color, selección de modelo).
 
 ## Instalación
 
-Necesitás [Node.js](https://nodejs.org) 18 o más nuevo instalado.
+Necesitás [Node.js](https://nodejs.org) **22 o más nuevo** (lo pide Ink,
+la librería que usa la interfaz del chat).
 
 ```bash
 npm install -g scorpk
@@ -30,12 +32,45 @@ PATH todavía:
 
 ```bash
 scorpk config set-key anthropic sk-ant-...
+```
+
+Después de guardar la key, te ofrece elegir el modelo de una lista real
+(fetcheada del proveedor en el momento) — nunca un valor adivinado. Si en
+algún momento querés ver esa lista de nuevo: `scorpk models [proveedor]`.
+
+```bash
 scorpk run "agregá un endpoint /health que devuelva 200"
 scorpk chat
 ```
 
-Cada cambio de archivo se muestra como diff antes de aplicarse; `--yes`
-lo aplica todo sin preguntar.
+`run` corre una tarea puntual y muestra los cambios con color antes de
+aplicarlos (`--yes` para saltear la confirmación). `chat` abre una sesión
+interactiva persistente con:
+
+- Banner con tu proveedor/modelo activos, cuenta (si iniciaste sesión) y
+  carpeta actual.
+- Comandos desde el chat, escribiendo `/`:
+  - `/model` — elegir otro modelo del proveedor activo, en vivo.
+  - `/provider` — cambiar a otro proveedor ya configurado.
+  - `/mode` (o `ctrl+t`) — alternar entre pedir confirmación por cambio
+    (`manual`) y aplicar todo automáticamente (`auto`).
+  - `/clear` — vaciar el historial de la sesión.
+  - `/help` — ver esta lista sin salir.
+  - `/exit` — salir.
+- Cada cambio de archivo se muestra en una tarjeta con el diff en color;
+  Enter/`y` aprueba, Esc/`n` rechaza.
+
+`scorpk auth login` conecta con la misma cuenta de scorpk.tech que la
+extensión (abre el navegador, un servidor local efímero recibe la vuelta)
+— hoy solo identifica el plan Free/Pro para lo que viene después (Modo
+equipo, servidores MCP); usar `run`/`chat` no depende de estar logueado,
+solo de tener un proveedor configurado con `config set-key`.
+
+## Qué falta (fuera de esta versión)
+
+Modo equipo, servidores MCP activos en una corrida, `go_to_definition`/
+diagnósticos (dependen del language server vivo de un editor), y el login
+de Hugging Face.
 
 ## Desarrollo (contribuir a este repo)
 
@@ -44,17 +79,3 @@ npm install
 npm run build
 npm link   # deja `scorpk` disponible global apuntando a este checkout
 ```
-
-`scorpk auth login` conecta con la misma cuenta de scorpk.tech que la
-extensión (abre el navegador, un servidor local efímero recibe la vuelta)
-— hoy solo identifica el plan Free/Pro para lo que viene después (Modo
-equipo, servidores MCP); correr tareas no depende de estar logueado, solo
-de tener un proveedor configurado con `config set-key`.
-
-## Qué falta (fuera del MVP)
-
-Modo equipo, servidores MCP activos en una corrida, `go_to_definition`/
-diagnósticos (dependen del language server vivo de un editor), y el login
-de Hugging Face. El motor de tool-calling y la mayoría de las tools ya
-están listos para eso — ver el mapeo de portabilidad en el historial del
-proyecto.

@@ -2,7 +2,7 @@
   "name": "scorpk",
   "displayName": "Scorpk CLI",
   "description": "Agente de IA para programar desde la terminal — mismo motor que la extensión de VS Code de Scorpk.",
-  "version": "0.1.2",
+  "version": "0.2.0",
   "license": "MIT",
   "author": {
     "name": "Cristian Trujillo",
@@ -28,12 +28,12 @@
     "anthropic",
     "openai"
   ],
-  "type": "commonjs",
+  "type": "module",
   "engines": {
-    "node": ">=18"
+    "node": ">=22"
   },
   "scripts": {
-    "build": "tsup src/cli.ts --format cjs --target node18 --clean --shims",
+    "build": "tsup src/cli.ts --format esm --target node22 --clean --shims",
     "dev": "tsx src/cli.ts",
     "typecheck": "tsc --noEmit",
     "prepublishOnly": "npm run typecheck && npm run build"
@@ -45,11 +45,18 @@
     "commander": "^12.1.0",
     "diff": "^5.2.0",
     "fast-glob": "^3.3.2",
-    "open": "^8.4.2"
+    "ink": "^7.1.1",
+    "ink-select-input": "^6.2.0",
+    "ink-spinner": "^5.0.0",
+    "ink-text-input": "^6.0.0",
+    "open": "^8.4.2",
+    "react": "^19.1.0"
   },
   "devDependencies": {
     "@types/diff": "^5.2.3",
     "@types/node": "^20.14.0",
+    "@types/react": "^19.1.0",
+    "ink-testing-library": "^4.0.0",
     "tsup": "^8.3.0",
     "tsx": "^4.19.0",
     "typescript": "^5.6.0"
